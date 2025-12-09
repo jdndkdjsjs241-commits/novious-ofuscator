@@ -2,6 +2,7 @@
 
 Novious is a lightweight, educational Lua obfuscator designed to help developers understand the fundamentals of code transformation, string encoding, and structural obfuscation.  
 It is not intended to provide full security, but rather to serve as a learning tool and a basic protection layer for simple Lua scripts.
+ObFuscate!: https://jdndkdjsjs241-commits.github.io/novious-ofuscator/
 
 ---
 
@@ -63,3 +64,8 @@ Feel free to open an issue or submit a pull request.
 If you find this project helpful, consider giving the repository a star to support development!
 
 thanks to those who helped me make this.
+
+## 🔥 Note
+This project helped me learn a lot about Lua, code transformation and web development.
+It was a fun and meaningful learning experience.
+It wont be actively I've kept it up because sometimes I really feel pressure and it stops feeling like a hobby, anyway thanks.
