@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Novious Obfuscator - Lua Script Obfuscator</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            background: linear-gradient(to bottom right, #1a202c, #2c5282, #1a202c);
+            min-height: 100vh;
+        }
+    </style>
+</head>
+<body class="p-4">
+    <div class="max-w-7xl mx-auto">
+        <!-- Header -->
+        <div class="text-center mb-8">
+            <div class="flex items-center justify-center gap-3 mb-4">
+                <svg class="w-12 h-12 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
+                </svg>
+                <h1 class="text-5xl font-bold text-white">Novious Obfuscator</h1>
+            </div>
+            <p class="text-gray-300 text-lg">Professional Lua Script Obfuscator</p>
+            <p class="text-gray-400 text-sm mt-2">by ScriptMaster & Azadopan</p>
+        </div>
+
+        <!-- Options Panel -->
+        <div class="bg-gray-800 rounded-lg p-6 mb-6 border border-gray-700">
+            <h2 class="text-2xl font-bold text-white mb-4 flex items-center gap-2">
+                <svg class="w-6 h-6 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                </svg>
+                Obfuscation Settings
+            </h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                <div>
+                    <label class="text-white font-semibold mb-2 block">Obfuscation Level:</label>
+                    <select id="obfLevel" class="w-full bg-gray-700 text-white p-2 rounded border border-gray-600">
+                        <option value="low">Low (Fast, Basic)</option>
+                        <option value="medium" selected>Medium (Balanced)</option>
+                        <option value="high">High (Maximum Protection)</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+                <label class="flex items-center gap-2 text-white cursor-pointer">
+                    <input type="checkbox" id="optRenameVars" checked class="w-4 h-4">
+                    <span class="text-sm">Rename Variables</span>
+                </label>
+                <label class="flex items-center gap-2 text-white cursor-pointer">
+                    <input type="checkbox" id="optEncryptStrings" checked class="w-4 h-4">
+                    <span class="text-sm">Encrypt Strings</span>
+                </label>
+                <label class="flex items-center gap-2 text-white cursor-pointer">
+                    <input type="checkbox" id="optAddJunk" class="w-4 h-4">
+                    <span class="text-sm">Add Junk Code</span>
+                </label>
+                <label class="flex items-center gap-2 text-white cursor-pointer">
+                    <input type="checkbox" id="optRemoveComments" checked class="w-4 h-4">
+                    <span class="text-sm">Remove Comments</span>
+                </label>
+                <label class="flex items-center gap-2 text-white cursor-pointer">
+                    <input type="checkbox" id="optMinify" checked class="w-4 h-4">
+                    <span class="text-sm">Minify Code</span>
+                </label>
+            </div>
+        </div>
+
+        <!-- Main Editor -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+            <!-- Input -->
+            <div class="bg-gray-800 rounded-lg p-6 border border-gray-700">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-xl font-bold text-white flex items-center gap-2">
+                        <svg class="w-5 h-5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path>
+                        </svg>
+                        Original Code
+                    </h2>
+                    <button onclick="loadExample()" class="px-3 py-1 bg-blue-600 hover:bg-blue-700 text-white rounded text-sm">
+                        Load Example
+                    </button>
+                </div>
+                <textarea id="inputCode" placeholder="Paste your Lua code here..." class="w-full h-96 bg-gray-900 text-green-400 p-4 rounded border border-gray-600 font-mono text-sm resize-none focus:outline-none focus:border-blue-500"></textarea>
+            </div>
+
+            <!-- Output -->
+            <div class="bg-gray-800 rounded-lg p-6 border border-gray-700">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-xl font-bold text-white flex items-center gap-2">
+                        <svg class="w-5 h-5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
+                        </svg>
+                        Obfuscated Code
+                    </h2>
+                    <div class="flex gap-2">
+                        <button onclick="copyToClipboard()" class="px-3 py-1 bg-green-600 hover:bg-green-700 text-white rounded text-sm flex items-center gap-1">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+                            </svg>
+                            Copy
+                        </button>
+                        <button onclick="downloadFile()" class="px-3 py-1 bg-purple-600 hover:bg-purple-700 text-white rounded text-sm flex items-center gap-1">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+                            </svg>
+                            Download
+                        </button>
+                    </div>
+                </div>
+                <textarea id="outputCode" readonly placeholder="Obfuscated code will appear here..." class="w-full h-96 bg-gray-900 text-blue-400 p-4 rounded border border-gray-600 font-mono text-sm resize-none focus:outline-none"></textarea>
+            </div>
+        </div>
+
+        <!-- Obfuscate Button -->
+        <div class="text-center mb-8">
+            <button onclick="obfuscate()" class="px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white text-xl font-bold rounded-lg shadow-lg transform hover:scale-105 transition-all">
+                🔒 OBFUSCATE CODE
+            </button>
+        </div>
+
+        <!-- Info Panel -->
+        <div class="bg-gray-800 rounded-lg p-6 border border-gray-700 mb-4">
+            <h3 class="text-xl font-bold text-white mb-4">How It Works:</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-gray-300">
+                <div>
+                    <h4 class="font-semibold text-blue-400 mb-2">✓ Variable Renaming</h4>
+                    <p class="text-sm">Replaces all variable names with random identifiers</p>
+                </div>
+                <div>
+                    <h4 class="font-semibold text-blue-400 mb-2">✓ String Encryption</h4>
+                    <p class="text-sm">Converts strings to byte arrays for protection</p>
+                </div>
+                <div>
+                    <h4 class="font-semibold text-blue-400 mb-2">✓ Junk Code Injection</h4>
+                    <p class="text-sm">Adds fake code to confuse deobfuscators</p>
+                </div>
+                <div>
+                    <h4 class="font-semibold text-blue-400 mb-2">✓ Code Minification</h4>
+                    <p class="text-sm">Removes whitespace and compresses code</p>
+                </div>
+                <div>
+                    <h4 class="font-semibold text-blue-400 mb-2">✓ Comment Removal</h4>
+                    <p class="text-sm">Strips all comments from source code</p>
+                </div>
+                <div>
+                    <h4 class="font-semibold text-blue-400 mb-2">✓ Advanced Wrapping</h4>
+                    <p class="text-sm">Wraps code in loader for extra protection</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Warning -->
+        <div class="bg-yellow-900 bg-opacity-30 border border-yellow-600 rounded-lg p-4">
+            <p class="text-yellow-300 text-sm">
+                ⚠️ <strong>Note:</strong> This obfuscator is for educational purposes. Obfuscated code may not work perfectly in all Roblox executors. Always test your obfuscated scripts before distribution.
+            </p>
+        </div>
+    </div>
+
+    <script>
+        // Generate random variable name
+        function generateVarName() {
+            const chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+            const length = Math.floor(Math.random() * 3) + 3;
+            let name = '_';
+            for (let i = 0; i < length; i++) {
+                name += chars[Math.floor(Math.random() * chars.length)];
+            }
+            return name;
+        }
+
+        // Encrypt string
+        function encryptString(str) {
+            const bytes = str.split('').map(c => c.charCodeAt(0));
+            return `(function() local t={${bytes.join(',')}} local s='' for i=1,#t do s=s..string.char(t[i]) end return s end)()`;
+        }
+
+        // Generate junk code
+        function generateJunk() {
+            const junkTemplates = [
+                `local ${generateVarName()}=${Math.random()>0.5?'nil':'false'};`,
+                `local ${generateVarName()}=function()return nil end;`,
+                `local ${generateVarName()}={};`,
+                `if ${Math.random()>0.5?'true':'false'} then end;`
+            ];
+            return junkTemplates[Math.floor(Math.random() * junkTemplates.length)];
+        }
+
+        // Main obfuscation
+        function obfuscate() {
+            const inputCode = document.getElementById('inputCode').value;
+            
+            if (!inputCode.trim()) {
+                alert('Please enter code to obfuscate');
+                return;
+            }
+
+            let code = inputCode;
+            const varMap = new Map();
+
+            const options = {
+                renameVariables: document.getElementById('optRenameVars').checked,
+                encryptStrings: document.getElementById('optEncryptStrings').checked,
+                addJunk: document.getElementById('optAddJunk').checked,
+                removeComments: document.getElementById('optRemoveComments').checked,
+                minify: document.getElementById('optMinify').checked
+            };
+
+            const level = document.getElementById('obfLevel').value;
+
+            // Remove comments
+            if (options.removeComments) {
+                code = code.replace(/--.*$/gm, '');
+                code = code.replace(/--\[\[[\s\S]*?\]\]/g, '');
+            }
+
+            // Rename variables
+            if (options.renameVariables) {
+                const varPattern = /\blocal\s+([a-zA-Z_][a-zA-Z0-9_]*)\s*=/g;
+                let match;
+                
+                while ((match = varPattern.exec(code)) !== null) {
+                    const originalName = match[1];
+                    if (!varMap.has(originalName)) {
+                        varMap.set(originalName, generateVarName());
+                    }
+                }
+
+                varMap.forEach((newName, oldName) => {
+                    const regex = new RegExp(`\\b${oldName}\\b`, 'g');
+                    code = code.replace(regex, newName);
+                });
+            }
+
+            // Encrypt strings
+            if (options.encryptStrings) {
+                code = code.replace(/"([^"]*)"/g, (match, str) => {
+                    if (str.length > 3 && !str.includes('\\')) {
+                        return encryptString(str);
+                    }
+                    return match;
+                });
+                
+                code = code.replace(/'([^']*)'/g, (match, str) => {
+                    if (str.length > 3 && !str.includes('\\')) {
+                        return encryptString(str);
+                    }
+                    return match;
+                });
+            }
+
+            // Add junk code
+            if (options.addJunk) {
+                const lines = code.split('\n');
+                const junkLines = [];
+                
+                for (let i = 0; i < lines.length; i++) {
+                    junkLines.push(lines[i]);
+                    if (Math.random() > 0.7 && lines[i].trim()) {
+                        junkLines.push(generateJunk());
+                    }
+                }
+                
+                code = junkLines.join('\n');
+            }
+
+            // Minify
+            if (options.minify) {
+                code = code.replace(/\s+/g, ' ');
+                code = code.replace(/\s*([;,=+\-*/<>(){}[\]])\s*/g, '$1');
+                code = code.trim();
+            }
+
+            // Advanced wrapping
+            if (level === 'high') {
+                const encoded = btoa(code);
+                code = `(function()local ${generateVarName()}='${encoded}';loadstring((function(s)local r=''for i=1,#s do r=r..string.char(s:byte(i))end return r end)(${generateVarName()}))()end)()`;
+            }
+
+            document.getElementById('outputCode').value = code;
+        }
+
+        // Copy to clipboard
+        function copyToClipboard() {
+            const outputCode = document.getElementById('outputCode').value;
+            if (!outputCode) {
+                alert('No code to copy!');
+                return;
+            }
+            navigator.clipboard.writeText(outputCode);
+            alert('Copied to clipboard!');
+        }
+
+        // Download file
+        function downloadFile() {
+            const outputCode = document.getElementById('outputCode').value;
+            if (!outputCode) {
+                alert('No code to download!');
+                return;
+            }
+            const blob = new Blob([outputCode], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'obfuscated_script.lua';
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        // Load example
+        function loadExample() {
+            const exampleCode = `-- Example Script
+local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer
+
+local function greet(name)
+    print("Hello, " .. name .. "!")
+end
+
+greet("World")
+
+local myVariable = 123
+local myString = "This is a test"
+
+if myVariable > 100 then
+    print("Variable is greater than 100")
+end`;
+            document.getElementById('inputCode').value = exampleCode;
+        }
+    </script>
+</body>
+                      </html>
